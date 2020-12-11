@@ -41,12 +41,20 @@ public class CharaAdapter extends RecyclerView.Adapter<CharaAdapter.CharaViewHol
     //TODO 11.6 the data at position i is extracted and placed on the i-th card
     @Override
     public void onBindViewHolder(@NonNull CharaViewHolder charaViewHolder, int i) {
+        charaViewHolder.textViewName.setText(dataSource.getName(i));
+        charaViewHolder.imageViewChara.setImageBitmap(dataSource.getImage(i));
+
     }
 
     //TODO 11.7 the total number of data points must be returned here
     @Override
     public int getItemCount() {
-        return 0;
+        /*Lastly, complete getItemCount to get the number of data points. Android depends on this
+        method to populate the RecyclerView. If this returns 0, there will be no Cards in the
+        RecyclerView.*/
+        //get num datapoints here
+        //Log.i("CharaAdapter",dataSource.getSize().toString());
+        return dataSource.getSize();
     }
 
     //TODO 11.4 complete the constructor to initialize the instance variables
@@ -57,6 +65,9 @@ public class CharaAdapter extends RecyclerView.Adapter<CharaAdapter.CharaViewHol
 
         CharaViewHolder(View view){
             super(view);
+            //represent each instance of the cardview on recycler view
+            imageViewChara = view.findViewById(R.id.cardViewImage);
+            textViewName = view.findViewById(R.id.cardViewTextName);
         }
 
     }

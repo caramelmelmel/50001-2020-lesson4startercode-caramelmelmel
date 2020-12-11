@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class DataEntry extends AppCompatActivity {
@@ -56,7 +57,16 @@ public class DataEntry extends AppCompatActivity {
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //write an explicit intent
+                int resultCode = Activity.RESULT_OK;
+                Intent intent = new Intent(DataEntry.this,MainActivity.class);
+                //extract from edittext widget
+                String name = String.valueOf(editTextNameEntry.getText());
+                String path = Utils.saveToInternalStorage(bitmap,name,DataEntry.this);
+                intent.putExtra(KEY_NAME,name);
+                intent.putExtra(KEY_PATH,path);
+                setResult(resultCode,intent);
+                finish();
             }
         });
 
@@ -68,7 +78,18 @@ public class DataEntry extends AppCompatActivity {
     //TODO 12.3 Write onActivityResult to get the image selected
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_GET && resultCode == RESULT_OK) {
-
+            //if image selected is passed as the uri
+            Uri fullphotoUri = data.getData();
+            //display image selected
+            imageViewSelected.setImageURI(fullphotoUri);
+            //get bitmap image from the uri
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),fullphotoUri);
+            } catch (FileNotFoundException ex){
+                Toast.makeText(DataEntry.this,"Please enter a valid image",Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                Toast.makeText(DataEntry.this, "Please select valid image", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
